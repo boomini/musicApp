@@ -10,9 +10,9 @@ import PropTypes from "prop-types";
 import Music from "./Music"
 
 import SideMenu from 'react-native-side-menu-updated'
+import Icon from 'react-native-vector-icons/AntDesign';
 import Menu from "../component/menu";
 
-const image = require('../assets/menu.png');
 
 export default class extends Component  {
   constructor(props) {
@@ -21,84 +21,82 @@ export default class extends Component  {
     this.toggle = this.toggle.bind(this);
 
     this.state = {
-      tabNm : "ALL",
-      isOpen: false,
-      selectedItem: 'About'
+      tabNm : "all",
+      isOpen:false
     };
   }
   static propTypes = {
     _musicList: PropTypes.array.isRequired
   };
-
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen,
     });
   }
-  updateMenuState(isOpen) {
-    this.setState({ isOpen });
+  create(){
+    
   }
-  onMenuItemSelected(item){
-    this.setState({
-      isOpen: false,
-      selectedItem: item,
-    });
-  };
 
+  onMenuItemSelected= item =>
+  this.setState({tabNm:item , isOpen: !this.state.isOpen });
+  
   render() {
     
-    const {_musicList } = this.props;
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
-
+    var {_musicList } = this.props;
+    const {tabNm , isOpen } = this.state;
+    
+    if( tabNm == "fav" ){
+      _musicList = _musicList.filter(music => music.favYn  == true );
+    }
     return(
-      <SafeAreaView>
-        <SideMenu 
-          isOpen={this.state.isOpen}
-            menu={menu}
-            onChange={isOpen => this.updateMenuState(isOpen)}
-          >
-          <View style={styles.container}>
-            <Text style={styles.title}>전체 리스트</Text>
-            <ScrollView contentContainerStyle={styles.toDos}>
-                {
-                Object.values(_musicList).map(function(data,index){
+         <View style={styles.container}>
+          <TouchableOpacity onPress={this.toggle} style={styles.menu} >
+            {isOpen ? 
+            <Menu onItemSelected={this.onMenuItemSelected} />
+            :
+            <Icon name="bars" size={30} color="#ffffff" style={styles.menuBtn} />}
+          </TouchableOpacity>
+          
+          <View style={styles.header}>
+              {tabNm == 'all' ? <Text style={styles.title}>전체 목록</Text>:<Text style={styles.title}>즐겨 찾기</Text>}
+          </View> 
+          <ScrollView contentContainerStyle={styles.toDos}>
+              {
+              Object.values(_musicList).map(function(data,index){
                 return <Music key={data.id} _music={data} _cnt={index+1}/>
-                })
-                }
-            </ScrollView>
-          </View>
-
-
-          <TouchableOpacity
-            onPress={this.toggle}
-            style={styles.button}
-          >
-            <Image
-              source={image}
-              style={{ width: 32, height: 32 }}
-            />
-          </TouchableOpacity>  
-        </SideMenu>
-      </SafeAreaView>
+              })
+              }
+          </ScrollView>
+       </View>
       )
   }
 }
 
-
-
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#000000',
     alignItems: 'center',
     flexDirection: 'column'
   },
+  menu:{
+     position:"absolute",
+     marginTop:50,
+     left:10
+  },
+  content:{
+    flex: 1,
+    backgroundColor: '#000000',
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
   title:{
-    color:"#FFFFFF",
-    fontSize:30,
     marginTop:50,
+    color:"#ffffff",
+    fontSize:30,
     fontWeight:"200",
-    marginBottom:30
+    marginBottom:25
   },
   toItems:{
     alignItems:"center"

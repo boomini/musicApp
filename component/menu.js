@@ -12,13 +12,41 @@ import {
 const window = Dimensions.get('window');
 
 
+
+export default function Menu({ onItemSelected }) {
+  return (
+    <ScrollView scrollsToTop={false} style={styles.menu}>
+      <Text
+        onPress={() => onItemSelected('all')}
+        style={styles.item}
+      >
+        전체 목록
+      </Text>
+
+      <Text
+        onPress={() => onItemSelected('fav')}
+        style={styles.item}
+      >
+        즐겨 찾기
+      </Text>
+    </ScrollView>
+  );
+}
+
+Menu.propTypes = {
+    onItemSelected: PropTypes.func.isRequired,
+};
+
+
+
 const styles = StyleSheet.create({
   menu: {
     flex: 1,
-    width: window.width,
-    height: window.height,
+    width: 100,
+    height: 100,
     backgroundColor: 'gray',
     padding: 20,
+    borderRadius : 20
   },
   avatarContainer: {
     marginBottom: 20,
@@ -37,31 +65,8 @@ const styles = StyleSheet.create({
   },
   item: {
     fontSize: 14,
+    color:"white",
     fontWeight: '300',
     paddingTop: 5,
   },
 });
-
-export default function Menu({ onItemSelected }) {
-  return (
-    <ScrollView scrollsToTop={false} style={styles.menu}>
-      <Text
-        onPress={() => onItemSelected('About')}
-        style={styles.item}
-      >
-        About
-      </Text>
-
-      <Text
-        onPress={() => onItemSelected('Contacts')}
-        style={styles.item}
-      >
-        Contacts
-      </Text>
-    </ScrollView>
-  );
-}
-
-Menu.propTypes = {
-    onItemSelected: PropTypes.func.isRequired,
-};
