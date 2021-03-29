@@ -29,7 +29,13 @@ export default class extends React.Component {
     event.stopPropagation;
     const {_music} = this.props
     console.log( _music );
-  }
+  };
+  _turnFav = (event) =>{
+    event.stopPropagation;
+    const {_music} = this.props
+    console.log( _music );
+  };
+  
   render() {
     const {_music : {musicTitle , musicFile , replyTime , favYn }, _cnt } = this.props;
     return(
@@ -40,16 +46,13 @@ export default class extends React.Component {
                 <View  style={styles.f4}><Text style={styles.txt}>{musicTitle}</Text></View>
                 <View  style={styles.f1}><Text style={styles.txt}>{replyTime}</Text></View>
               </TouchableOpacity>
-                <View  style={[styles.f1 , styles.fav ]}>
+              <TouchableOpacity  style={ [styles.f1 , styles.fav ] } onPress={this._turnFav}>
                   { favYn ? 
                     <Icon name="star" size={30} color="#4F8EF7" />  :  
                     <Icon name="staro" size={30} color="#4F8EF7" /> 
                   }
-                  
-                </View>
-                
-                
-        </View>
+              </TouchableOpacity>
+         </View>
       </View>
       )
   };
