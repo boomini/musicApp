@@ -7,8 +7,6 @@ import {
   TouchableOpacity 
 } from "react-native";
 import PropTypes from "prop-types";
-import { LinearGradient } from "expo-linear-gradient";
-import uuidv1 from "uuid/v1";
 import Icon from 'react-native-vector-icons/AntDesign';
 
 
@@ -22,27 +20,26 @@ export default class extends React.Component {
     };
   }
   static propTypes = {
-    _cnt : PropTypes.number.isRequired,
-    _music : PropTypes.object.isRequired
+    _music : PropTypes.object.isRequired,
+    _onItemSelected: PropTypes.func.isRequired,
   }
   _turnMusic = (event) =>{
     event.stopPropagation;
     const {_music} = this.props
-    console.log( _music );
   };
   _turnFav = (event) =>{
     event.stopPropagation;
-    const {_music} = this.props
-    console.log( _music );
+    const {_onItemSelected , _music } = this.props
+    _onItemSelected( _music.favYn , _music.id );
+
   };
   
   render() {
-    const {_music : {musicTitle , musicFile , replyTime , favYn }, _cnt } = this.props;
+    const {_music : {musicTitle , musicFile , replyTime , favYn },   } = this.props;
     return(
       <View style={styles.container}>
         <View style={styles.column}>
               <TouchableOpacity  style={[styles.f5 , styles.touchZone]} onPress={this._turnMusic}>
-                <View  style={styles.f1}><Text style={styles.txt}>{_cnt}</Text></View>
                 <View  style={styles.f4}><Text style={styles.txt}>{musicTitle}</Text></View>
                 <View  style={styles.f1}><Text style={styles.txt}>{replyTime}</Text></View>
               </TouchableOpacity>

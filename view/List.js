@@ -12,7 +12,8 @@ import Music from "./Music"
 import SideMenu from 'react-native-side-menu-updated'
 import Icon from 'react-native-vector-icons/AntDesign';
 import Menu from "../component/menu";
-
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('db.childApp') 
 
 export default class extends Component  {
   constructor(props) {
@@ -26,7 +27,8 @@ export default class extends Component  {
     };
   }
   static propTypes = {
-    _musicList: PropTypes.array.isRequired
+    _musicList: PropTypes.array.isRequired,
+    _onMusicItemSelected: PropTypes.func.isRequired,
   };
   toggle() {
     this.setState({
@@ -35,19 +37,19 @@ export default class extends Component  {
   }
   create(){
     
-  }
-
+  };
   onMenuItemSelected= item =>
   this.setState({tabNm:item , isOpen: !this.state.isOpen });
   
   render() {
     
-    var {_musicList } = this.props;
+    var {_musicList , _onMusicItemSelected  } = this.props;
     const {tabNm , isOpen } = this.state;
     
     if( tabNm == "fav" ){
       _musicList = _musicList.filter(music => music.favYn  == true );
-    }
+    };
+
     return(
          <View style={styles.container}>
           <TouchableOpacity onPress={this.toggle} style={styles.menu} >
@@ -62,9 +64,9 @@ export default class extends Component  {
           </View> 
           <ScrollView contentContainerStyle={styles.toDos}>
               {
-              Object.values(_musicList).map(function(data,index){
-                return <Music key={data.id} _music={data} _cnt={index+1}/>
-              })
+              Object.values(_musicList).map(music=>
+                <Music key={music.id} _music={music} _onItemSelected={_onMusicItemSelected}/>
+                )
               }
           </ScrollView>
        </View>

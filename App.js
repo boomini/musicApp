@@ -4,6 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import Loading from "./view/Loading"
 import List from "./view/List"
 
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase('db.childApp') 
+const tableNm = "test1";
 var musicList=[
   {id:1 , musicTitle : "개구리 앞다리" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
   {id:2 , musicTitle : "돼지삼형제" , replyTime:"00:25", musicFile : "abc.mp3",favYn:false},
@@ -15,38 +18,86 @@ var musicList=[
   {id:8 , musicTitle : "할머니어디가" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
   {id:9 , musicTitle : "여드름" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false}
 ];
-var favList = [
-  1,3,5,7,9
-];
 
 export default class extends React.Component {
+  constructor (props){
+    super(props)
+  }
   state = {
-    isLoading: true
+    isLoading: true ,
+    favList : []
   };
+  componentWillUnmount(){
+    this.createTable();
+  }
+  componentDidMount() {
+    this.getMusicList();
+  }
 
+  createTable = async () =>{
+    
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS '+tableNm+' (id INTEGER)'
+      );
+    })
+  };
+  insertFav(id){
+    db.transaction(tx => {tx.executeSql('INSERT INTO '+tableNm+' (ID) values (?)', [id]);},);
+  };
+  deleteFav(id){
+    db.transaction(tx => {tx.executeSql('DELETE FROM '+tableNm+' WHERE ID = ? ', [id]);},);
+  };
+  selectFav(){
+    return new Promise((resolve=>{
+      db.transaction(
+        tx => {
+          tx.executeSql('SELECT ID FROM '+tableNm+'', [], (trans, result) => {
+            let row = result.rows;
+            resolve(row)
+            return row
+          });
+        }
+      );
+    }))
+  }
+  onMusicItemSelected = (flag , id ) => {
+    !flag ? this.insertFav(id) : this.deleteFav(id);
+    this.getMusicList();
+  };
   getMusicList = async () => {
+    var objectFav = await this.selectFav();
+    console.log( "objectFav  " + objectFav.length )
+    
+    console.log("!!!!!!!!")
+    /*
+    console.log(  Object.values(objectFav)["objectFav"] )
+    var favlist = Object.values(objectFav).map(fav=>{
+      console.log( fav )
+      console.log( Object.values(fav)["id"] )
+      return fav.id
+    })
+    console.log("!!!")
+    console.log( favlist )
+    */
+    this.setState({isLoading:false})
+  };
+  render() {
+    var { favList , isLoading } = this.state;
+    favList = favList || [];
+    /*
     musicList = musicList.map(function(music){
-      
       if( favList.indexOf( music.id ) >= 0 ){
         music.favYn = true;
       };
       return music;
     });
+     */
     
-    this.setState({
-      isLoading: false
-    });
-
-  };
-  componentDidMount() {
-    this.getMusicList();
-  }
-  render() {
-    const { isLoading } = this.state;
     return isLoading ? (
       <Loading />
     ) : (
-      <List _musicList={musicList}/>
+      <List _musicList={musicList} _onMusicItemSelected={this.onMusicItemSelected}/>
     );
   }
 }
