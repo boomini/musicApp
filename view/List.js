@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import Music from "./Music"
 
 import SideMenu from 'react-native-side-menu-updated'
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Fontisto';
 import Menu from "../component/menu";
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('db.childApp') 
@@ -38,13 +38,17 @@ export default class extends Component  {
   create(){
     
   };
-  onMenuItemSelected= item =>
-  this.setState({tabNm:item , isOpen: !this.state.isOpen });
-  
+  onMenuClick(tabNm){
+    console.log("!!!!222222222222222")
+    console.log(tabNm)
+    console.log("!!!!222222222222222")
+    //this.setState({tabNm:tabNm});
+  };
+
   render() {
     
-    var {_musicList , _onMusicItemSelected  } = this.props;
-    const {tabNm , isOpen } = this.state;
+    let {_musicList , _onMusicItemSelected  } = this.props;
+    let {tabNm , isOpen } = this.state;
     
     if( tabNm == "fav" ){
       _musicList = _musicList.filter(music => music.favYn  == true );
@@ -52,23 +56,34 @@ export default class extends Component  {
 
     return(
          <View style={styles.container}>
-          <TouchableOpacity onPress={this.toggle} style={styles.menu} >
-            {isOpen ? 
-            <Menu onItemSelected={this.onMenuItemSelected} />
-            :
-            <Icon name="bars" size={30} color="#ffffff" style={styles.menuBtn} />}
-          </TouchableOpacity>
           
           <View style={styles.header}>
               {tabNm == 'all' ? <Text style={styles.title}>전체 목록</Text>:<Text style={styles.title}>즐겨 찾기</Text>}
           </View> 
-          <ScrollView contentContainerStyle={styles.toDos}>
-              {
-              Object.values(_musicList).map(music=>
-                <Music key={music.id} _music={music} _onItemSelected={_onMusicItemSelected}/>
-                )
-              }
-          </ScrollView>
+          <View style={styles.content}>
+            <ScrollView contentContainerStyle={styles.toDos}>
+                {
+                Object.values(_musicList).map(music=>
+                  <Music key={music.id} _music={music} _onItemSelected={_onMusicItemSelected}/>
+                  )
+                }
+            </ScrollView>
+          </View>
+          <View style={styles.footer}>
+
+             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick('all')} >
+              <Icon name="bookmark-alt" size={30} color="#FFFFFF" />
+             </TouchableOpacity>
+
+             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick('fav')} >
+               <Icon name="bookmark" size={30} color="#FFFFFF" />
+             </TouchableOpacity>
+
+             <TouchableOpacity style={styles.menu}>
+               <Icon name="search" size={30} color="#FFFFFF" />
+             </TouchableOpacity>
+             
+          </View>
        </View>
       )
   }
@@ -82,27 +97,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column'
   },
-  menu:{
-     position:"absolute",
-     marginTop:50,
-     left:10
+  header:{
+    flex: 1,
+    marginTop:30
   },
   content:{
+    flex: 8,
+  },
+  footer:{
     flex: 1,
-    backgroundColor: '#000000',
-    alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection:"row"
   },
   title:{
-    marginTop:50,
     color:"#ffffff",
     fontSize:30,
     fontWeight:"200",
-    marginBottom:25
   },
-  toItems:{
-    alignItems:"center"
-  },
-
-
+  menu:{
+    flex:1,
+    alignItems:'center'
+  }
 });

@@ -6,8 +6,8 @@ import List from "./view/List"
 
 import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('db.childApp') 
-const tableNm = "test1";
-var musicList=[
+let tableNm = "test1";
+let musicList=[
   {id:1 , musicTitle : "개구리 앞다리" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
   {id:2 , musicTitle : "돼지삼형제" , replyTime:"00:25", musicFile : "abc.mp3",favYn:false},
   {id:3 , musicTitle : "꿈나라 별나라" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
@@ -16,7 +16,27 @@ var musicList=[
   {id:6 , musicTitle : "곰세마리" , replyTime:"01:30", musicFile : "abc.mp3",favYn:false},
   {id:7 , musicTitle : "엄마아빠" , replyTime:"02:12", musicFile : "abc.mp3",favYn:false},
   {id:8 , musicTitle : "할머니어디가" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
-  {id:9 , musicTitle : "여드름" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false}
+  {id:9 , musicTitle : "여드름" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:10 , musicTitle : "10music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:11 , musicTitle : "11music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:12 , musicTitle : "12music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:13 , musicTitle : "13music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:14 , musicTitle : "14music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:15 , musicTitle : "15music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:16 , musicTitle : "16music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:17 , musicTitle : "17music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:18 , musicTitle : "18music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:19 , musicTitle : "19music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:20 , musicTitle : "20music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:21 , musicTitle : "21music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:22 , musicTitle : "22music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:23 , musicTitle : "23music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:24 , musicTitle : "24music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:25 , musicTitle : "25music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:26 , musicTitle : "26music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:27 , musicTitle : "27music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:28 , musicTitle : "28music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
+  {id:29 , musicTitle : "29music" , replyTime:"00:20", musicFile : "abc.mp3", favYn:false},
 ];
 
 export default class extends React.Component {
@@ -25,14 +45,14 @@ export default class extends React.Component {
   }
   state = {
     isLoading: true ,
-    favList : []
+    musicList:[]
   };
   componentWillUnmount(){
     this.createTable();
   }
   componentDidMount() {
     this.getMusicList();
-  }
+  };
 
   createTable = async () =>{
     
@@ -42,10 +62,10 @@ export default class extends React.Component {
       );
     })
   };
-  insertFav(id){
+  async insertFav(id){
     db.transaction(tx => {tx.executeSql('INSERT INTO '+tableNm+' (ID) values (?)', [id]);},);
   };
-  deleteFav(id){
+  async deleteFav(id){
     db.transaction(tx => {tx.executeSql('DELETE FROM '+tableNm+' WHERE ID = ? ', [id]);},);
   };
   selectFav(){
@@ -62,37 +82,33 @@ export default class extends React.Component {
     }))
   }
   onMusicItemSelected = (flag , id ) => {
+    /**
+     * false -> 즐겨찾기 안함
+     * true -> 즐겨찾기 함
+    */
     !flag ? this.insertFav(id) : this.deleteFav(id);
     this.getMusicList();
   };
   getMusicList = async () => {
-    var objectFav = await this.selectFav();
-    console.log( "objectFav  " + objectFav.length )
-    
-    console.log("!!!!!!!!")
-    /*
-    console.log(  Object.values(objectFav)["objectFav"] )
-    var favlist = Object.values(objectFav).map(fav=>{
-      console.log( fav )
-      console.log( Object.values(fav)["id"] )
-      return fav.id
-    })
-    console.log("!!!")
-    console.log( favlist )
-    */
-    this.setState({isLoading:false})
-  };
-  render() {
-    var { favList , isLoading } = this.state;
-    favList = favList || [];
-    /*
+    const objectFav = await this.selectFav();
+    let favList = [];
+    for( var i=0 ; i <objectFav["_array"].length ; i++ ){
+      favList.push( objectFav["_array"][i]["id"] )
+    };
     musicList = musicList.map(function(music){
       if( favList.indexOf( music.id ) >= 0 ){
         music.favYn = true;
+      }else{
+        music.favYn = false;
       };
       return music;
     });
-     */
+
+    this.setState({isLoading:false , musicList:musicList })
+  };
+  render() {
+    
+    let { isLoading } = this.state;
     
     return isLoading ? (
       <Loading />

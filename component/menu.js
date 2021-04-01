@@ -42,31 +42,18 @@ Menu.propTypes = {
 const styles = StyleSheet.create({
   menu: {
     flex: 1,
-    width: 100,
-    height: 100,
-    backgroundColor: 'gray',
+    width: 150,
+    height: 200,
+    backgroundColor: 'white',
     padding: 20,
-    borderRadius : 20
-  },
-  avatarContainer: {
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    flex: 1,
-  },
-  name: {
-    position: 'absolute',
-    left: 70,
-    top: 20,
+    borderRadius : 20,
+    flexDirection:'row'
   },
   item: {
-    fontSize: 14,
-    color:"white",
-    fontWeight: '300',
+    flex:1,
+    fontSize: 20,
+    color:"black",
+    fontWeight: '400',
     paddingTop: 5,
   },
 });

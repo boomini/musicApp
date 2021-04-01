@@ -35,7 +35,8 @@ export default class extends React.Component {
   };
   
   render() {
-    const {_music : {musicTitle , musicFile , replyTime , favYn },   } = this.props;
+    let {_music : {musicTitle , musicFile , replyTime , favYn },   } = this.props;
+    
     return(
       <View style={styles.container}>
         <View style={styles.column}>
