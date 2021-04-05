@@ -22,16 +22,18 @@ export default class extends React.Component {
   static propTypes = {
     _music : PropTypes.object.isRequired,
     _onItemSelected: PropTypes.func.isRequired,
+    _onMusicTurn: PropTypes.func.isRequired
+    
   }
   _turnMusic = (event) =>{
     event.stopPropagation;
-    const {_music} = this.props
+    const { _onMusicTurn , _music } = this.props
+    _onMusicTurn( _music.id );
   };
   _turnFav = (event) =>{
     event.stopPropagation;
     const {_onItemSelected , _music } = this.props
     _onItemSelected( _music.favYn , _music.id );
-
   };
   
   render() {

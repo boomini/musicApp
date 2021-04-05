@@ -28,7 +28,7 @@ export default class extends Component  {
   }
   static propTypes = {
     _musicList: PropTypes.array.isRequired,
-    _onMusicItemSelected: PropTypes.func.isRequired,
+    _onMusicFavSelected: PropTypes.func.isRequired,
   };
   toggle() {
     this.setState({
@@ -38,16 +38,17 @@ export default class extends Component  {
   create(){
     
   };
-  onMenuClick(tabNm){
-    console.log("!!!!222222222222222")
-    console.log(tabNm)
-    console.log("!!!!222222222222222")
-    //this.setState({tabNm:tabNm});
+
+  onMenuClick = (event) =>{
+    event.stopPropagation;
+    let {tabNm} = this.state;
+    tabNm == 'all' ? tabNm = 'fav' : tabNm = 'all';
+    this.setState({tabNm});
   };
 
   render() {
     
-    let {_musicList , _onMusicItemSelected  } = this.props;
+    let {_musicList , _onMusicFavSelected , _onMusicTurn , _onStopMusic } = this.props;
     let {tabNm , isOpen } = this.state;
     
     if( tabNm == "fav" ){
@@ -64,18 +65,22 @@ export default class extends Component  {
             <ScrollView contentContainerStyle={styles.toDos}>
                 {
                 Object.values(_musicList).map(music=>
-                  <Music key={music.id} _music={music} _onItemSelected={_onMusicItemSelected}/>
+                  <Music key={music.id} _music={music} _onItemSelected={_onMusicFavSelected} _onMusicTurn={_onMusicTurn} />
                   )
                 }
             </ScrollView>
+            
           </View>
+          
           <View style={styles.footer}>
-
-             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick('all')} >
+            <TouchableOpacity  style={styles.menu} onPress={_onStopMusic} >
+            <Icon name="pause" size={30} color="#FFFFFF" />
+            </TouchableOpacity> 
+             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick} >
               <Icon name="bookmark-alt" size={30} color="#FFFFFF" />
              </TouchableOpacity>
 
-             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick('fav')} >
+             <TouchableOpacity style={styles.menu} onPress={this.onMenuClick} >
                <Icon name="bookmark" size={30} color="#FFFFFF" />
              </TouchableOpacity>
 
