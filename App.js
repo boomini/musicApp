@@ -10,17 +10,25 @@ import * as SQLite from 'expo-sqlite';
 let playObject = new Audio.Sound();
 const db = SQLite.openDatabase('db.childApp') 
 let tableNm = "test1";
+let musicType = [ "자연" , "동물" , "역할" ]
 let musicList=[
-  {id:1 , musicTitle : "개구리 앞다리" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
-  {id:2 , musicTitle : "돼지삼형제" , replyTime:"00:25", musicFile : "abc.mp3",favYn:false},
-  {id:3 , musicTitle : "꿈나라 별나라" , replyTime:"00:30", musicFile : "abc.mp3",favYn:false},
-  {id:4 , musicTitle : "로켓트" , replyTime:"01:30", musicFile : "abc.mp3",favYn:false}
+  {id:1 , type:musicType[0] ,  musicTitle : "풍선아 풍선아" ,musicFile : "toBalloons.mp3",favYn:false},
+  {id:2 , type:musicType[0] ,  musicTitle : "SHE" ,musicFile : "she.mp3",favYn:false},
+  {id:3 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:4 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:5 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:6 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:7 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:8 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:9 , type:musicType[1] ,  musicTitle : "SHE1" ,musicFile : "she.mp3",favYn:false},
+  {id:10 , type:musicType[2] ,  musicTitle : "SHE2" ,musicFile : "she.mp3",favYn:false},
+  {id:11 , type:musicType[2] ,  musicTitle : "SHE2" ,musicFile : "she.mp3",favYn:false},
 ];
 const sound = new Audio.Sound();
 export default class extends React.Component {
   constructor (props){
     super(props)
-  }
+  };
   state = {
     isLoading: true ,
     musicList:[]
@@ -68,12 +76,19 @@ export default class extends React.Component {
   };
   
   onMusicTurn = async (id)=>{
+
+    const musicitem = musicList.find(function(music){
+      if( music.id == id ){
+        return music;
+      }
+    });
+    let musicPath =  `http://192.168.200.134:3000/public/${musicitem.musicFile}` ;
+
     await sound.unloadAsync();
-    await sound.loadAsync(  { uri: `http://192.168.0.107:3000/public/she.mp3` } );
+    await sound.loadAsync(  { uri:  musicPath } );
     await sound.playAsync();
   };
   onStopMusic = async()=> {
-    console.log("!!!!!!!!!!!!")
     await sound.unloadAsync();
   }
   getMusicList = async () => {

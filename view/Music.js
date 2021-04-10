@@ -44,7 +44,6 @@ export default class extends React.Component {
         <View style={styles.column}>
               <TouchableOpacity  style={[styles.f5 , styles.touchZone]} onPress={this._turnMusic}>
                 <View  style={styles.f4}><Text style={styles.txt}>{musicTitle}</Text></View>
-                <View  style={styles.f1}><Text style={styles.txt}>{replyTime}</Text></View>
               </TouchableOpacity>
               <TouchableOpacity  style={ [styles.f1 , styles.fav ] } onPress={this._turnFav}>
                   { favYn ? 
